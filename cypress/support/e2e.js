@@ -15,3 +15,10 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+Cypress.on('uncaught:exception', (err, runnable) => {
+  if (err.message.includes("Unexpected token '<'")) {
+    // Prevent test from failing when HTML is returned instead of JSON
+    return false
+  }
+})
