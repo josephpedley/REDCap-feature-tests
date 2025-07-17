@@ -28,7 +28,8 @@
    cd REDCap-feature-tests
 
 2. **Install dependencies:**  
-   npm install
+   npm install --save-dev cypress-file-upload
+
 
 3. **Ask me for the `.env` file and put it in the root directory**
 
