@@ -28,6 +28,14 @@ class ProjectSetupPage {
   openAddEditRecords() {
   cy.contains('Add / Edit Records').click();
 }
+  openUserRights() {
+  cy.get('button.btn.btn-defaultrc.btn-xs.fs13')
+    .contains('User Rights')
+    .click();
+}
+  openDataQuality(){
+    cy.contains('a', 'Data Quality').click();
+  }
 
 }
 
