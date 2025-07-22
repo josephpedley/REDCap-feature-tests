@@ -15,9 +15,6 @@ class DashboardPage {
     cy.contains('New Project').click();
   }
 
-  openProjectByName(projectName) {
-    cy.contains('a', projectName).click();
-  }
 
 }
 

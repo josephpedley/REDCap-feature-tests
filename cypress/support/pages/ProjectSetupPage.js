@@ -36,6 +36,9 @@ class ProjectSetupPage {
   openDataQuality(){
     cy.contains('a', 'Data Quality').click();
   }
+  openOnlineDesigner(){
+    cy.contains('button', 'Online Designer').click();
+  }
 
 }
 

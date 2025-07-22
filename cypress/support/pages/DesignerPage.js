@@ -36,8 +36,15 @@ class DesignerPage{
     cy.contains('button', 'Save').click();
     cy.wait(1000)
     cy.contains(fieldLabel).should('be.visible');
-
-
+  }
+  createForm(formName){
+    cy.get('div.fs12').find('button').contains('Create').click();
+    cy.get('td#new-consent').find('button').click();
+    cy.contains('span', 'New instrument name:')
+    cy.get('#new_form-consent').type(formName);
+    cy.get('#new-consent input[type="button"][value="Create"]').click();
+    cy.contains('span', 'SUCCESS!').should('be.visible')
+    cy.contains('button', 'Close').click();
 
   }
 
