@@ -14,8 +14,7 @@ describe('Logging Module - End User Verification', () => {
     ProjectCreationPage.uploadProjectXml('Project_1.xml');
     ProjectCreationPage.clickCreateProject();
 
-    DashboardPage.goToMyProjects()
-    MyProjectsPage.openProjectByName('B.2.23.0100')
+   
         
     ProjectSetupPage.openProjectSetup();
     ProjectSetupPage.moveToProduction();
