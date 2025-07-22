@@ -4,6 +4,9 @@ class UserRightsPage {
     .clear()
     .type(username, {force: true});
     cy.get('#addUserBtn').click()
+    cy.wait(500)
+    cy.contains('button', 'Add user').click({ force: true });
+
 }
 clickAddUserButton() {
   cy.contains('button.ui-button', 'Add user').click();
