@@ -39,6 +39,9 @@ class ProjectSetupPage {
   openOnlineDesigner(){
     cy.contains('button', 'Online Designer').click();
   }
+  openDictionary(){
+    cy.contains('a', 'Dictionary').click();
+  }
 
 }
 
