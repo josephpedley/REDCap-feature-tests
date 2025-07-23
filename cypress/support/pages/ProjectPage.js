@@ -14,5 +14,9 @@ class ProjectPage{
   openProjectRevisionHistory(){
     cy.contains('a', 'Project Revision History').click();
   }
+  openDataImportTool(){
+    cy.contains('a', 'Data Import Tool').click();
+    cy.contains('Download your Data Import Template')
+  }
 }
 export default new ProjectPage();

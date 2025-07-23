@@ -10,6 +10,11 @@ class ControlCenterPage {
     cy.get('a[href="/redcap_v15.4.2/ControlCenter/superusers.php"]')
     .click()
   }
+  openModulesServicesConfig(){
+    cy.contains('a', 'Modules/Services Configuration').click();
+
+  }
+  
 
   
 }
