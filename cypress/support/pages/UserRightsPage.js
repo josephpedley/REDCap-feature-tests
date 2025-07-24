@@ -44,6 +44,17 @@ cy.get('button.ok-button.ui-button.ui-corner-all.ui-widget')
   cy.contains('button', 'Close').click();
 
 }
+assignUserToRole(user,role){
+  cy.get('#new_username_assign')
+  .clear() 
+  .type(user);
+  cy.get('#assignUserBtn').click();
+  cy.get('#user_role').select(role);
+  cy.get('#assignDagRoleBtn').click();
+
+
+
+}
 
 
 }

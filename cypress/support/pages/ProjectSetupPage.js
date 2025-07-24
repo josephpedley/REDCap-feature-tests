@@ -15,6 +15,24 @@ class ProjectSetupPage {
     cy.get('#keep_data').check({ force: true });
   }
 
+  requestMoveToProduction(){
+    cy.contains('button', 'Yes, Request Admin to Move to Production Status').click();
+
+  }
+  verifyRequestSuccessMsg(){
+     cy.get('#actionMsg')
+      .should('be.visible')
+      .and('contain.text', 'Your request to move the project to production status has been sent to a REDCap administrator.')
+  }
+  cancelRequest(){
+    cy.contains('button', 'Cancel request').click();
+    cy.get('button.ui-button.ui-corner-all.ui-widget').contains('Submit').click();
+    cy.get('span')
+  .should('contain.text', 'Project status:')
+  .and('contain.text', 'Development');
+
+  }
+
   confirmMove() {
     cy.contains('button', 'YES, Move').should('be.visible').click();
   }

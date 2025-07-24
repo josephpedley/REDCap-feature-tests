@@ -4,6 +4,7 @@ class ControlCenterPage {
     cy.get('a[href="/redcap_v15.4.2/ControlCenter/user_settings.php"]')
       .should('be.visible')
       .click();
+      cy.contains('System-level User Settings').should('be.visible')
   }
 
   openAdmininstratorPrivileges() {
