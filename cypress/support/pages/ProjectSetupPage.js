@@ -72,6 +72,11 @@ class ProjectSetupPage {
       .click();
     cy.contains('Saved!').should('be.visible');
   }
+  disableAutoIncrementRecords(){
+    cy.get('button[onclick*="auto_inc_set"]')
+  .should('contain.text', 'Disable')
+  .click();
+  }
 
 }
 
