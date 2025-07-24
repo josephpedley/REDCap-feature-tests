@@ -47,6 +47,25 @@ class DesignerPage{
     cy.contains('button', 'Close').click();
 
   }
+  clickButtonSaveAndVerifySuccess(rowNumber = 1, buttonLabel) {
+  // Click the button on the instrument row
+  cy.get(`#row_${rowNumber}`).contains('button', buttonLabel).click();
+  
+  // Click Save Changes button
+  cy.contains('button', 'Save Changes').click();
+  
+  // Verify the success message appears
+  cy.get('#saveSurveyMsg')
+    .contains('Your survey settings were successfully saved!')
+    .should('be.visible');
+}
+clickDeleteSurveySettings(rowNumber) {
+  cy.get(`#row_${rowNumber}`).contains('button', 'Survey settings').click();
+  cy.contains('button', 'Delete Survey Settings').click();
+  cy.get('button.ok-button').contains('Delete Survey Settings').click();
+  cy.get('button.close-button').click();
+}
+
 
 
 }

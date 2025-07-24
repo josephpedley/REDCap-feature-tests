@@ -42,6 +42,18 @@ class ProjectSetupPage {
   openDictionary(){
     cy.contains('a', 'Dictionary').click();
   }
+  clickSetupEnableSurveysBtn(expectedText) {
+    cy.get('#setupEnableSurveysBtn')
+      .should('be.visible')
+      .and('contain', expectedText)
+      .click();
+  }
+   confirmEnableDisableSurvey(actionText) {
+    cy.get('button.ok-button.ui-button')
+      .contains(actionText)
+      .click();
+    cy.contains('Saved!').should('be.visible');
+  }
 
 }
 
