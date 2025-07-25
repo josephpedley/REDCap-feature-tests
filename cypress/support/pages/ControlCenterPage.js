@@ -15,6 +15,9 @@ class ControlCenterPage {
     cy.contains('a', 'Modules/Services Configuration').click();
 
   }
+  openFieldValidationPage(){
+    cy.contains('a', 'Field Validation Types').click();
+  }
   
 
   

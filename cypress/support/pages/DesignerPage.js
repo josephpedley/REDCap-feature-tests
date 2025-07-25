@@ -65,6 +65,21 @@ clickDeleteSurveySettings(rowNumber) {
   cy.get('button.ok-button').contains('Delete Survey Settings').click();
   cy.get('button.close-button').click();
 }
+assertDropdown(expectedOptions){
+  cy.get('input[type="button"][value="Add Field"]').first().click();
+  cy.get('select#field_type').select("Text Box (Short Text, Number, Date/Time, ...)");
+   cy.get('select#val_type')
+    .should('be.visible')
+    .find('option')
+    .then($options => {
+      const actualOptions = [...$options].map(opt => opt.textContent.trim());
+      expect(actualOptions).to.deep.equal(expectedOptions);
+    });
+    cy.get('button.ui-button.ui-corner-all.ui-widget').contains('Cancel').click();
+
+
+
+}
 
 
 
