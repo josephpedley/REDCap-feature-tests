@@ -26,5 +26,11 @@ class ProjectPage{
   openRecordStatusDashboard2(){
     cy.get('#rsd-men-link').click();
   }
+  openDAGPage(){
+    cy.contains('a', 'DAG').click();
+  }
+  openUserRightsFromProject(){
+    cy.contains('a', 'User Rights').click()
+  }
 }
 export default new ProjectPage();
