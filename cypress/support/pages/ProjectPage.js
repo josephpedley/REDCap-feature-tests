@@ -6,7 +6,9 @@ class ProjectPage{
     cy.contains('a', 'Designer').click();
   }
   openRecordStatusDashboard(){
-    cy.contains('span', 'Record Status Dashboard').click();
+    cy.contains('span', 'Record Status Dashboard')
+      .should('be.visible')
+      .click();
   }
   openProjectHome(){
     cy.contains('a', 'Project Home').click();
@@ -20,6 +22,9 @@ class ProjectPage{
   }
   openProjectSetup(){
     cy.contains('a', 'Project Setup').click();
+  }
+  openRecordStatusDashboard2(){
+    cy.get('#rsd-men-link').click();
   }
 }
 export default new ProjectPage();
