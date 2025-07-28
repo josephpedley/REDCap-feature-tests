@@ -32,5 +32,8 @@ class ProjectPage{
   openUserRightsFromProject(){
     cy.contains('a', 'User Rights').click()
   }
+  openDataExportsReportsStats(){
+    cy.contains('a', 'Data Exports, Reports, and Stats').click();
+  }
 }
 export default new ProjectPage();
