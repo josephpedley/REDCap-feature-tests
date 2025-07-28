@@ -36,6 +36,9 @@ class LoggingPage {
     expect(matchedRow, `Log entry for "${dataChangeIncludes}"`).to.not.be.undefined;
   });
 }
+downloadAllLogging(){
+  cy.contains('button', 'All logging').click();
+}
 
 }
 
