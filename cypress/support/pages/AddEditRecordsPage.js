@@ -9,6 +9,8 @@ class AddEditRecordPage {
     cy.get('#inputString')
   .clear()
   .type(recordNumber);
+  cy.get('body').click(0, 0);
+  cy.wait(500)
 
   }
   addRecordDataTypesEvent1(){
@@ -34,6 +36,13 @@ cy.get('td.nowrap a[href*="page=data_types"]').first().click();
     cy.contains('button', 'Stay on page').click();
     
   }
+  TypeInteger(value) {
+  cy.get('input[name="integer"]')
+    .type(value.toString());
+}
+saveAndExitForm(){
+  cy.contains('span', 'Save & Exit Form').click();
+}
 
  
 }

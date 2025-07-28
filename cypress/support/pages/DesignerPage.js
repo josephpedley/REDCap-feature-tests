@@ -76,8 +76,14 @@ assertDropdown(expectedOptions){
       expect(actualOptions).to.deep.equal(expectedOptions);
     });
     cy.get('button.ui-button.ui-corner-all.ui-widget').contains('Cancel').click();
-
-
+}
+assertBranchingLogic(field, expectedLogic) {
+  cy.get(`#bl-label_${field}`)
+    .should('be.visible')
+    .and('contain.text', `Branching logic: ${expectedLogic}`);
+}
+openSurveryDistributionTools(){
+  cy.contains('span', 'Survey Distribution Tools').click();
 
 }
 
