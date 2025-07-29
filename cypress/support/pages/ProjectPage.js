@@ -35,5 +35,12 @@ class ProjectPage{
   openDataExportsReportsStats(){
     cy.contains('a', 'Data Exports, Reports, and Stats').click();
   }
+  openCustomiseEsignatures(){
+    cy.contains('a', 'Customize & Manage Locking/E-signatures').click()
+  }
+  openFileRepository(){
+    cy.contains('a', 'File Repository').click()
+    cy.get('.ItemListBreadcrumb-link').contains('All Files').should('be.visible');
+  }
 }
 export default new ProjectPage();

@@ -18,6 +18,14 @@ class ControlCenterPage {
   openFieldValidationPage(){
     cy.contains('a', 'Field Validation Types').click();
   }
+  openFileUploadSettings(){
+    cy.contains('a', 'File Upload Settings').click();
+    cy.contains('Configuration Options for Various Types of Stored Files').should('be.visible');
+  }
+  toggleFileSharingViaPublicLink(choice){
+    cy.get('select[name="file_repository_allow_public_link"]').select(choice);
+
+  }
   
 
   
