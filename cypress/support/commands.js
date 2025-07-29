@@ -18,6 +18,13 @@ Cypress.Commands.add('loginTestUser', () => {
   cy.get('#password').type(Cypress.env('TESTUSER_PASSWORD'));
   cy.contains('button', 'Log In').click();
 });
+
+Cypress.Commands.add('loginTestUser2', () => {
+  cy.visit(Cypress.env('BASE_URL'));
+  cy.get('#username').type(Cypress.env('TESTUSER_USERNAME') + '2');
+  cy.get('#password').type(Cypress.env('TESTUSER_PASSWORD'));
+  cy.contains('button', 'Log In').click();
+});
  Cypress.Commands.add('createProject', (projectName, projectFile) => {
    DashboardPage.clickNewProject();
    ProjectCreationPage.enterProjectTitle(projectName);
