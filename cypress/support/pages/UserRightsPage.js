@@ -1,14 +1,27 @@
 class UserRightsPage {
-    addUser(username) {
+    addUserWithoutChecking(username) {
     cy.get('#new_username')
     .clear()
     .type(username, {force: true});
     cy.get('#addUserBtn').click()
     cy.wait(500)
     cy.contains('Adding new user').should('be.visible')
+    cy.get('input[name="record_create').uncheck()
+    cy.get('input[name="data_logging"]').check();
     cy.contains('button', 'Add user').click({ force: true });
 
 }
+ addUserWithLogging(username) {
+    cy.get('#new_username')
+    .clear()
+    .type(username, {force: true});
+    cy.get('#addUserBtn').click()
+    cy.wait(500)
+    cy.contains('Adding new user').should('be.visible')
+    cy.get('input[name="data_logging"]').check();
+    cy.contains('button', 'Add user').click({ force: true });
+ }
+
 clickAddUserButton() {
   cy.contains('button.ui-button', 'Add user').click();
 }

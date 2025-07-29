@@ -18,6 +18,10 @@ class AddEditRecordPage {
 cy.get('td.nowrap a[href*="page=data_types"]').first().click();
 
   }
+
+  addRecordTextValidationEvent1(){
+    cy.get('td.nowrap a[href*="page=text_validation"]').first().click();
+  }
   verifySaveChangesOnLeave(){
     cy.contains('Save your changes?').should('be.visible');
     cy.contains('button', 'Save changes and leave');
@@ -42,6 +46,9 @@ cy.get('td.nowrap a[href*="page=data_types"]').first().click();
 }
 saveAndExitForm(){
   cy.contains('span', 'Save & Exit Form').click();
+}
+openRecord(recordNum){
+  cy.contains('a', recordNum).click()
 }
 
  

@@ -28,17 +28,15 @@ class DataExportsReportsAndStatsPage {
   /**
    * Assert the title of a report row by 1-based row number.
    */
-  assertReportRowTitle(rowNumber, expectedTitle) {
-    cy.get('#table-report_list tr')
-      .not('[id="reprow_ALL"]')
-      .not('[id="reprow_SELECTED"]')
-      .not('[id="reprow_"]') // Skip special/empty rows
-      .filter((index, el) => el.id.startsWith('reprow_'))
-      .eq(rowNumber - 1)
-      .within(() => {
-        cy.get('td').eq(2).should('contain.text', expectedTitle);
-      });
-  }
+ assertReportRowTitle(rowNumber, expectedTitle) {
+  cy.get('#table-report_list tr')
+    .filter((index, el) => el.id.startsWith('reprow_')) // Keep all report rows including "ALL", "SELECTED", etc.
+    .eq(rowNumber - 1)
+    .within(() => {
+      cy.get('td').eq(2).should('contain.text', expectedTitle);
+    });
+}
+
 
   /**
    * Click the "Copy" button for a report by row number, then confirm.
