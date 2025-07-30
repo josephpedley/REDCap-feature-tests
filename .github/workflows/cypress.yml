@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Cypress
         run: |
-          echo "🔍 Running tests for folder: ${{ matrix.folder }}"
+          echo "Running tests for folder: ${{ matrix.folder }}"
           mkdir -p cypress-results cypress/reports
           npx cypress run \
             --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
@@ -58,7 +58,7 @@ jobs:
           mkdir -p cypress/reports
           if compgen -G "cypress/reports/*.json" > /dev/null; then
             npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
-            npx marge cypress/reports/merged-report.json -f report -o cypress/reports
+            npx marge cypress/reports/merged-report.json -f report -o cypress/reports --inline
           else
             echo "⚠️ No JSON report files found to merge."
           fi
@@ -93,5 +93,4 @@ jobs:
         with:
           name: "${{ matrix.folder }} - Mochawesome JSON Report"
           path: |
-            cypress/reports/*.json
-            !cypress/reports/merged-report.json
+            cypress/reports/merged-report.json
