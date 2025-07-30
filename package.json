@@ -25,6 +25,8 @@
     "cypress-downloadfile": "^1.2.4",
     "cypress-file-upload": "^5.0.8",
     "dotenv": "^17.2.1",
-    "mochawesome": "^7.1.3"
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0"
   }
 }
