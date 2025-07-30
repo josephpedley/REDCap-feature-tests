@@ -22,6 +22,7 @@
     "cypress": "^14.5.2"
   },
   "devDependencies": {
-    "dotenv": "^17.2.1"
+    "dotenv": "^17.2.1",
+    "mochawesome": "^7.1.3"
   }
 }
