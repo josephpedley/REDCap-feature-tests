@@ -43,29 +43,27 @@ jobs:
 
       - name: Run Cypress
         run: |
-          echo "🔍 Running tests for folder: ${{ matrix.folder }}"
+          echo "Running tests for folder: ${{ matrix.folder }}"
           mkdir -p cypress-results cypress/reports
           npx cypress run \
             --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
             --reporter mochawesome \
-            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true,reportFilename=report-${{ matrix.folder | replace(' ', '_') }} \
             > cypress-results/test-report.log 2>&1 || true
 
-      - name: Upload Mochawesome JSON report
+      - name: Upload JSON report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.folder }} - Mochawesome JSON Report"
-          path: |
-            cypress/reports/*.json
-            !cypress/reports/merged-report.json
+          name: "${{ matrix.folder }} - JSON"
+          path: cypress/reports/*.json
 
-      - name: Upload test report log
+      - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.folder }} - Cypress Console Log"
+          name: "${{ matrix.folder }} - Console Log"
           path: cypress-results/test-report.log
 
   merge-reports:
@@ -73,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download all JSON report artifacts
+      - name: Download all JSON artifacts
         uses: actions/download-artifact@v4
         with:
           path: combined-reports
@@ -86,18 +84,18 @@ jobs:
       - name: Install mochawesome tools
         run: npm install mochawesome mochawesome-merge marge --no-save
 
-      - name: Merge all JSON files
+      - name: Merge JSON reports
         run: |
           mkdir -p merged
           find combined-reports -name "*.json" -exec cp {} merged/ \;
           npx mochawesome-merge merged/*.json > merged/merged-report.json
 
-      - name: Generate HTML from merged report
+      - name: Generate full HTML report
         run: |
           npx marge merged/merged-report.json -f full-report -o merged --inline
 
-      - name: Upload merged HTML report
+      - name: Upload final combined report
         uses: actions/upload-artifact@v4
         with:
-          name: "Combined Cypress HTML Report"
+          name: Combined Cypress HTML Report
           path: merged/full-report.html
