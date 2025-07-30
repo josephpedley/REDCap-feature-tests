@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Cypress for folder: ${{ matrix.folder }}
+      - name: "Run Cypress for folder: ${{ matrix.folder }}"
         run: |
           mkdir -p cypress-results cypress/reports
           npx cypress run \
