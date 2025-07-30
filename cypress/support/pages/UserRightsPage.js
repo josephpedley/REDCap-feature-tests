@@ -65,10 +65,38 @@ assignUserToRole(user,role){
   cy.get('#assignUserBtn').click();
   cy.get('#user_role').select(role);
   cy.get('#assignDagRoleBtn').click();
-
-
-
 }
+ checkTableRow(roleName, username) {
+  const expectedRole = roleName === '—' ? '—' : roleName;
+
+  cy.get('#table-user_rights_roles_table tbody tr').then($rows => {
+    const matchedRow = [...$rows].find(row => {
+      const cells = row.querySelectorAll('td');
+      const roleText = cells[0]?.textContent.replace(/\s| |&nbsp;/g, '').trim();
+      const userText = cells[1]?.textContent.trim();
+      return roleText === expectedRole && userText.includes(username);
+    });
+
+    expect(matchedRow, `Row for role "${expectedRole}" and user "${username}"`).to.exist;
+
+    const cells = matchedRow.querySelectorAll('td');
+    const actualRole = cells[0].textContent.replace(/\s| |&nbsp;/g, '').trim();
+    const actualUser = cells[1].textContent.trim();
+
+    expect(actualRole).to.eq(expectedRole);
+    expect(actualUser).to.include(username);
+  });
+}
+editUserPriveleges(user){
+  cy.get(`a.userLinkInTable[userid="${user}"]`).click();
+  cy.contains('span', 'Edit user privileges').click()
+  cy.contains('Editing existing user').should('be.visible');
+}
+saveUserChanges(){
+  cy.contains('button', 'Save Changes').click()
+}
+
+
 
 
 }
