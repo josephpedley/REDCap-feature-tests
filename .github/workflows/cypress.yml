@@ -26,12 +26,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - - name: Run Cypress and save output
-  run: |
-    mkdir -p cypress-results
-    npx cypress run \
-      --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
-      > cypress-results/test-report.log 2>&1 || true
+      - name: Run Cypress and save output
+        run: |
+          mkdir -p cypress-results
+          npx cypress run \
+            --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
+            > cypress-results/test-report.log 2>&1 || true
 
       - name: Print test summary
         if: always()
