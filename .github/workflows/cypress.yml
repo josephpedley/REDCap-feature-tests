@@ -53,6 +53,7 @@ jobs:
       - name: Merge JSON and generate HTML report
         if: always()
         run: |
+          mkdir -p cypress/reports
           npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
           npx marge cypress/reports/merged-report.json -f report -o cypress/reports
 
