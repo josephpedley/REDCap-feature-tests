@@ -35,6 +35,7 @@ Cypress.Commands.add('loginTestUser2', () => {
  Cypress.Commands.add('moveToProduction', () => {
     ProjectSetupPage.openProjectSetup();
     ProjectSetupPage.moveToProduction();
+    cy.wait(500)
     ProjectSetupPage.keepExistingData();
     cy.wait(500)
     ProjectSetupPage.confirmMove();
