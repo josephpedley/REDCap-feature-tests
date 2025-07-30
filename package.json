@@ -20,5 +20,8 @@
   "homepage": "https://github.com/josephpedley/REDCap-feature-tests#readme",
   "dependencies": {
     "cypress": "^14.5.2"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.1"
   }
 }
