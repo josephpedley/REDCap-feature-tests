@@ -22,6 +22,7 @@
     "cypress": "^14.5.2"
   },
   "devDependencies": {
+    "cypress-file-upload": "^5.0.8",
     "dotenv": "^17.2.1",
     "mochawesome": "^7.1.3"
   }
