@@ -48,14 +48,20 @@ jobs:
           npx cypress run \
             --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true \
             > cypress-results/test-report.log 2>&1 || true
 
       - name: Merge JSON and generate HTML report
         if: always()
         run: |
           mkdir -p cypress/reports
-          npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
-          npx marge cypress/reports/merged-report.json -f report -o cypress/reports
+          if compgen -G "cypress/reports/*.json" > /dev/null; then
+            npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
+            npx marge cypress/reports/merged-report.json -f report -o cypress/reports
+          else
+            echo "⚠️ No JSON report files found to merge."
+          fi
 
       - name: Print test summary
         if: always()
