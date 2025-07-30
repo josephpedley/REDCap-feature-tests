@@ -6,6 +6,20 @@ on:
 jobs:
   run-cypress:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        folder:
+          - "Data Access Groups"
+          - "Data Collection And Storage"
+          - "Data Entry"
+          - "Data Import"
+          - "Data Integrity"
+          - "Data Quality"
+          - "Logging Module"
+          - "Online Designer"
+          - "Project-Level Management"
+          - "Reporting"
+          - "User Access Control"
 
     env:
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
@@ -26,40 +40,37 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Cypress and save output
+      - name: Run Cypress for folder: ${{ matrix.folder }}
         run: |
           mkdir -p cypress-results
           npx cypress run \
+            --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
             --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
             > cypress-results/test-report.log 2>&1 || true
 
-      - name: Print test summary
-        if: always()
-        run: |
-          echo "📄 Test Summary:"
-          if command -v jq &> /dev/null; then
-            cat cypress/reports/*.json | jq -r '.results[].suites[].tests[] | "- \(.title): \(.state | ascii_upcase)"'
-          else
-            echo "jq not found; skipping summary."
-          fi
+      - name: Merge Mochawesome JSON reports
+        run: npx mochawesome-merge cypress/reports/*.json > mochawesome.json
+
+      - name: Generate HTML Report
+        run: npx marge mochawesome.json --reportDir cypress/reports
 
       - name: Upload test report log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Cypress Console Log
+          name: Cypress Console Log - ${{ matrix.folder }}
           path: cypress-results/test-report.log
 
-      - name: Upload Mochawesome HTML report
+      - name: Upload Mochawesome HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Mochawesome HTML Report
-          path: cypress/reports/*.html
+          name: Mochawesome HTML Report - ${{ matrix.folder }}
+          path: cypress/reports/mochawesome.html
 
-      - name: Upload Mochawesome JSON report
+      - name: Upload Mochawesome JSON Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Mochawesome JSON Report
-          path: cypress/reports/*.json
+          name: Mochawesome JSON Report - ${{ matrix.folder }}
+          path: mochawesome.json
