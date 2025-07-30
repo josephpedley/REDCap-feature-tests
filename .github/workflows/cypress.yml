@@ -86,9 +86,7 @@ jobs:
 
       - name: Merge all JSON files
         run: |
-          mkdir -p merged
-          find combined-reports -name "*.json" -exec cp {} merged/ \;
-          npx mochawesome-merge merged/*.json > merged/merged-report.json
+          npx mochawesome-merge "combined-reports/**/*.json" > merged/merged-report.json
       - name: Generate HTML from merged report
         run: |
           npx marge merged/merged-report.json -f full-report -o merged --inline
