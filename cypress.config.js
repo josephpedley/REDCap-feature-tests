@@ -5,6 +5,14 @@ const path = require('path');
 
 module.exports = defineConfig({
   projectId: '3pazfm',
+
+  reporter: 'mochawesome',
+  reporterOptions: {
+  reportDir: 'cypress/reports',
+  overwrite: false,
+  html: true,
+  json: true
+},
   e2e: {
     redirectionLimit: 999,
     supportFile: 'cypress/support/e2e.js',
