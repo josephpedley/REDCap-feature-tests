@@ -94,7 +94,7 @@ jobs:
 
       - name: Generate HTML from merged report
         run: |
-          npx marge merged/merged-report.json -f full-report -o merged
+          npx marge merged/merged-report.json -f full-report -o merged --inline
 
       - name: Upload merged HTML report
         uses: actions/upload-artifact@v4
