@@ -7,6 +7,13 @@ jobs:
   run-cypress:
     runs-on: ubuntu-latest
 
+    env:
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      TESTUSER_USERNAME: ${{ secrets.TESTUSER_USERNAME }}
+      TESTUSER_PASSWORD: ${{ secrets.TESTUSER_PASSWORD }}
+      BASE_URL: ${{ secrets.BASE_URL }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
