@@ -41,15 +41,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: "Run Cypress for folder: ${{ matrix.folder }}"
+      - name: Run Cypress
         run: |
+          echo "🔍 Running tests for folder: ${{ matrix.folder }}"
           mkdir -p cypress-results cypress/reports
           npx cypress run \
             --env BASE_URL=${BASE_URL},ADMIN_USERNAME=${ADMIN_USERNAME},ADMIN_PASSWORD=${ADMIN_PASSWORD},TESTUSER_USERNAME=${TESTUSER_USERNAME},TESTUSER_PASSWORD=${TESTUSER_PASSWORD} \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
             > cypress-results/test-report.log 2>&1 || true
 
-      - name: Merge JSON reports and generate HTML
+      - name: Merge JSON and generate HTML report
         if: always()
         run: |
           npx mochawesome-merge cypress/reports/*.json > cypress/reports/merged-report.json
@@ -84,4 +85,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: "${{ matrix.folder }} - Mochawesome JSON Report"
-          path: cypress/reports/*.json
+          path: |
+            cypress/reports/*.json
+            !cypress/reports/merged-report.json
