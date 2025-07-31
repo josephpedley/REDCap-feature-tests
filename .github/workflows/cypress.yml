@@ -68,7 +68,7 @@ jobs:
         with:
           name: "${{ matrix.folder }} - Mochawesome JSON Report"
           path: |
-            cypress/reports/*.json
+            cypress/reports/**/*.json
             !cypress/reports/merged-report.json
       - name: Upload test report log
         if: always()
