@@ -22,6 +22,17 @@ class UserRightsPage {
     cy.contains('button', 'Add user').click({ force: true });
  }
 
+ addUser(username) {
+    cy.get('#new_username')
+    .clear()
+    .type(username, {force: true});
+    cy.get('#addUserBtn').click()
+    cy.wait(500)
+    cy.contains('Adding new user').should('be.visible')
+    cy.contains('button', 'Add user').click({ force: true });
+
+}
+
 clickAddUserButton() {
   cy.contains('button.ui-button', 'Add user').click();
 }
