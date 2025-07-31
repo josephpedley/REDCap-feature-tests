@@ -49,7 +49,6 @@ jobs:
             --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",ADMIN_PASSWORD="$ADMIN_PASSWORD",TESTUSER_USERNAME="$TESTUSER_USERNAME",TESTUSER_PASSWORD="$TESTUSER_PASSWORD" \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
             --reporter cypress-mochawesome-reporter \
-            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true \
             > cypress-results/test-report.log 2>&1 || true
       - name: Upload Cypress screenshots
         if: always()
@@ -70,7 +69,7 @@ jobs:
         with:
           name: "${{ matrix.folder }} - Mochawesome JSON Report"
           path: |
-            cypress/reports/**/*.json
+            cypress/reports/.jsons/*.json
             !cypress/reports/merged-report.json
       - name: Upload test report log
         if: always()

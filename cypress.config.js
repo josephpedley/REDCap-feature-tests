@@ -25,7 +25,7 @@ module.exports = defineConfig({
     supportFile: 'cypress/support/e2e.js',
     setupNodeEvents(on, config) {
       require('cypress-mochawesome-reporter/plugin')(on);
-      
+
       on('task', {
         getLatestCsv() {
           const downloadsFolder = path.resolve('cypress/downloads');
