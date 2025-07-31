@@ -1,0 +1,73 @@
+name: Cypress Manual Run with Pics
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-cypress:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        folder:
+          - "Data Access Groups"
+          - "Data Collection And Storage"
+          - "Data Entry"
+          - "Data Import"
+          - "Data Integrity"
+          - "Data Quality"
+          - "Logging Module"
+          - "Online Designer"
+          - "Project-Level Management"
+          - "Reporting"
+          - "User Access Control"
+
+    env:
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      TESTUSER_USERNAME: ${{ secrets.TESTUSER_USERNAME }}
+      TESTUSER_PASSWORD: ${{ secrets.TESTUSER_PASSWORD }}
+      BASE_URL: ${{ secrets.BASE_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Cypress tests
+        run: |
+          mkdir -p cypress-results cypress/reports
+          echo "🔍 Running tests in folder: ${{ matrix.folder }}"
+          npx cypress run \
+            --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",ADMIN_PASSWORD="$ADMIN_PASSWORD",TESTUSER_USERNAME="$TESTUSER_USERNAME",TESTUSER_PASSWORD="$TESTUSER_PASSWORD" \
+            --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
+            > cypress-results/test-report.log 2>&1 || true
+
+      - name: Install mochawesome tools
+        run: npm install mochawesome mochawesome-merge marge --no-save
+
+      - name: Merge mochawesome JSONs and generate HTML report
+        run: |
+          mkdir -p cypress/final-report
+          npx mochawesome-merge cypress/reports/*.json > cypress/final-report/report.json
+          npx marge cypress/final-report/report.json -f "report-${{ matrix.folder }}" -o cypress/final-report --inline
+
+      - name: Upload Cypress HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: "Report - ${{ matrix.folder }}"
+          path: cypress/final-report/*.html
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.folder }} - Console Log"
+          path: cypress-results/test-report.log
