@@ -13,6 +13,9 @@ module.exports = defineConfig({
   html: false,
   json: true
 },
+ video: true,
+  screenshotOnRunFailure: true,
+  
   e2e: {
     redirectionLimit: 999,
     supportFile: 'cypress/support/e2e.js',

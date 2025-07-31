@@ -51,6 +51,20 @@ jobs:
             --reporter mochawesome \
             --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true \
             > cypress-results/test-report.log 2>&1 || true
+
+      - name: Upload Cypress screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.folder }} - Cypress Screenshots"
+          path: cypress/screenshots
+
+      - name: Upload Cypress videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.folder }} - Cypress Videos"
+          path: cypress/videos
       - name: Upload Mochawesome JSON report
         if: always()
         uses: actions/upload-artifact@v4
