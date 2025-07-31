@@ -4,62 +4,50 @@ import ModulesServicesConfigPage from "../../support/pages/ModulesServicesConfig
 import MyProjectsPage from "../../support/pages/MyProjectsPage";
 import ProjectCreationPage from "../../support/pages/ProjectCreationPage";
 import ProjectPage from "../../support/pages/ProjectPage";
+import LoggingPage from "../../support/pages/LoggingPage.cy";
+import ProjectSetupPage from "../../support/pages/ProjectSetupPage";
 
 describe('Feature: Survey Feature Control', () => {
   it('As a REDCap end user, I want to see that the survey feature can be enabled or disabled and functions as expected', () => {
     cy.loginAdmin();
 
-    // Create a new project
+    // Step 1: Create a new project
     DashboardPage.clickNewProject();
     ProjectCreationPage.enterProjectTitle('A.6.4.1500.100');
     ProjectCreationPage.selectProjectPurpose('Practice / Just for fun');
     ProjectCreationPage.uploadProjectXml('Project_1.xml');
     ProjectCreationPage.clickCreateProject();
 
-    // Disable surveys in the Control Center
+    // Step 2: Disable surveys in the Control Center
     DashboardPage.goToControlCenter();
     ControlCenterPage.openModulesServicesConfig();
-    ModulesServicesConfigPage.DisableSurveys();
+    ModulesServicesConfigPage.disableSurveys();
 
-    // Open project and confirm surveys are unavailable
+    // Step 3: Open project and confirm survey feature is unavailable
     DashboardPage.goToMyProjects();
     MyProjectsPage.openProjectByName('A.6.4.1500.100');
     cy.contains('Use surveys in this project').should('not.exist');
 
-    // Re-enable surveys
+    // Step 4: Re-enable surveys in the Control Center
     DashboardPage.goToControlCenter();
     ControlCenterPage.openModulesServicesConfig();
-    ModulesServicesConfigPage.EnableSurveys();
+    ModulesServicesConfigPage.enableSurveys();
 
-    // Open project again and disable surveys within the project
+    // Step 5: Open project again and disable surveys from within project setup
     DashboardPage.goToMyProjects();
     MyProjectsPage.openProjectByName('A.6.4.1500.100');
-    cy.get('#setupEnableSurveysBtn')
-      .should('be.visible')
-      .and('contain', 'Disable')
-      .click();
+    ProjectPage.openProjectSetup();
 
-    cy.get('button.ok-button.ui-button')
-      .contains('Disable')
-      .click();
+    ProjectSetupPage.clickSetupEnableSurveysBtn('Disable');
+    ProjectSetupPage.confirmEnableDisableSurvey('Disable');
 
     cy.get('#setupEnableSurveysBtn')
       .should('be.visible')
       .and('contain', 'Enable');
 
-    // Open Logging tab and assert expected entries
+    // Step 6: Open Logging tab and verify recent log entry
     ProjectPage.openLoggingTab();
-
-    cy.get('table.form_border tr').first().within(() => {
-      cy.get('td').eq(1).should('contain.text', 'Username');
-      cy.get('td').eq(2).should('contain.text', 'Action');
-      cy.get('td').eq(3).should('contain.text', 'List of Data Changes');
-    });
-
-    cy.get('table.form_border tr').eq(1).within(() => {
-      cy.get('td').eq(1).should('contain.text', 'test_admin');
-      cy.get('td').eq(2).should('contain.text', 'Manage/Design');
-      cy.get('td').eq(3).should('contain.text', 'Modify project settings');
-    });
+    LoggingPage.verifyLoggingTableHeaders();
+    LoggingPage.verifyLoggingEntry(1, 'test_admin', 'Manage/Design', 'Modify project settings');
   });
 });
