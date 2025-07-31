@@ -1,11 +1,10 @@
-name: Cypress Manual Run with Pics
+name: Cypress Manual Run
 on:
   workflow_dispatch:
 
 jobs:
   run-cypress:
     runs-on: ubuntu-latest
-    
     strategy:
       matrix:
         folder:
@@ -20,80 +19,131 @@ jobs:
           - "Project-Level Management"
           - "Reporting"
           - "User Access Control"
-    
     env:
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       TESTUSER_USERNAME: ${{ secrets.TESTUSER_USERNAME }}
       TESTUSER_PASSWORD: ${{ secrets.TESTUSER_PASSWORD }}
       BASE_URL: ${{ secrets.BASE_URL }}
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-       
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-       
+
       - name: Install dependencies
         run: npm ci
-       
-      - name: Run Cypress tests
+
+      - name: Run Cypress
         run: |
-          echo "🔍 Running tests in folder: ${{ matrix.folder }}"
-          mkdir -p cypress-results
+          echo "🔍 Running tests for folder: ${{ matrix.folder }}"
+          mkdir -p cypress-results cypress/reports
           npx cypress run \
             --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",ADMIN_PASSWORD="$ADMIN_PASSWORD",TESTUSER_USERNAME="$TESTUSER_USERNAME",TESTUSER_PASSWORD="$TESTUSER_PASSWORD" \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
-            2>&1 | tee cypress-results/test-report.log || true
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true \
+            > cypress-results/test-report.log 2>&1 || true
+
+      # Create a folder structure that preserves the matrix folder name for screenshots
+      - name: Organize screenshots with folder prefix
+        if: always()
+        run: |
+          if [ -d "cypress/screenshots" ]; then
+            mkdir -p "organized-screenshots/${{ matrix.folder }}"
+            cp -r cypress/screenshots/* "organized-screenshots/${{ matrix.folder }}/" 2>/dev/null || true
+          fi
+
+      - name: Upload Cypress screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "cypress-screenshots"
+          path: organized-screenshots/
+          retention-days: 30
+
+      - name: Upload Cypress videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "cypress-videos-${{ matrix.folder }}"
+          path: cypress/videos
+
+      - name: Upload Mochawesome JSON report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "mochawesome-json-reports"
+          path: |
+            cypress/reports/*.json
+            !cypress/reports/merged-report.json
+
+      - name: Upload test report log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.folder }} - Cypress Console Log"
+          path: cypress-results/test-report.log
+
+  merge-reports:
+    needs: run-cypress
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JSON report artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: mochawesome-json-reports
+          path: json-reports
+
+      - name: Download screenshots artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: screenshots
+        continue-on-error: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
       - name: Install mochawesome tools
         run: npm install mochawesome mochawesome-merge marge --no-save
 
-      - name: Generate individual HTML report
-        if: always()
+      - name: Merge all JSON files
         run: |
-          mkdir -p cypress/final-report
-          echo "=== Debug: Checking for reports ==="
-          ls -la cypress/reports/ || echo "No reports directory found"
-          
-          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
-            echo "Found JSON reports, generating HTML..."
-            ls -la cypress/reports/*.json
-            npx mochawesome-merge cypress/reports/*.json > cypress/final-report/report.json
-            npx marge cypress/final-report/report.json -f "report-${{ matrix.folder }}" -o cypress/final-report --inline
-            echo "Generated report: cypress/final-report/report-${{ matrix.folder }}.html"
-          else
-            echo "No JSON reports found. Full directory structure:"
-            find . -name "*.json" -path "*/cypress/*" 2>/dev/null || echo "No JSON files found in cypress directory"
+          mkdir -p merged
+          npx mochawesome-merge "json-reports/**/*.json" > merged/merged-report.json
+
+      - name: Copy screenshots to report directory
+        run: |
+          if [ -d "screenshots" ]; then
+            mkdir -p merged/screenshots
+            cp -r screenshots/* merged/screenshots/ 2>/dev/null || true
           fi
 
-      - name: Upload Cypress HTML Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: "Report - ${{ matrix.folder }}"
-          path: cypress/final-report/*.html
+      - name: Generate HTML from merged report
+        run: |
+          npx marge merged/merged-report.json \
+            -f full-report \
+            -o merged \
+            --inline \
+            --reportDir merged
 
-      - name: Upload Cypress Screenshots
-        if: always()
+      - name: Upload merged HTML report with screenshots
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.folder }} - Screenshots"
-          path: cypress/screenshots
+          name: "Combined Cypress HTML Report"
+          path: |
+            merged/full-report.html
+            merged/screenshots/
 
-      - name: Upload Cypress Videos
+      - name: Upload all screenshots separately (backup)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: "${{ matrix.folder }} - Videos"
-          path: cypress/videos
-
-      - name: Upload test logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ matrix.folder }} - Console Log"
-          path: cypress-results/test-report.log
+          name: "All Cypress Screenshots"
+          path: screenshots/
