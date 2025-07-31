@@ -1,12 +1,11 @@
 name: Cypress Manual Run with Pics
-
 on:
   workflow_dispatch:
 
 jobs:
   run-cypress:
     runs-on: ubuntu-latest
-
+    
     strategy:
       matrix:
         folder:
@@ -21,49 +20,76 @@ jobs:
           - "Project-Level Management"
           - "Reporting"
           - "User Access Control"
-
+    
     env:
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       TESTUSER_USERNAME: ${{ secrets.TESTUSER_USERNAME }}
       TESTUSER_PASSWORD: ${{ secrets.TESTUSER_PASSWORD }}
       BASE_URL: ${{ secrets.BASE_URL }}
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
+       
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-
+       
       - name: Install dependencies
         run: npm ci
-
+       
       - name: Run Cypress tests
         run: |
-          mkdir -p cypress-results cypress/reports
           echo "🔍 Running tests in folder: ${{ matrix.folder }}"
+          mkdir -p cypress-results
           npx cypress run \
             --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",ADMIN_PASSWORD="$ADMIN_PASSWORD",TESTUSER_USERNAME="$TESTUSER_USERNAME",TESTUSER_PASSWORD="$TESTUSER_PASSWORD" \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
-            > cypress-results/test-report.log 2>&1 || true
+            2>&1 | tee cypress-results/test-report.log || true
 
       - name: Install mochawesome tools
         run: npm install mochawesome mochawesome-merge marge --no-save
 
-      - name: Merge mochawesome JSONs and generate HTML report
+      - name: Generate individual HTML report
+        if: always()
         run: |
           mkdir -p cypress/final-report
-          npx mochawesome-merge cypress/reports/*.json > cypress/final-report/report.json
-          npx marge cypress/final-report/report.json -f "report-${{ matrix.folder }}" -o cypress/final-report --inline
+          echo "=== Debug: Checking for reports ==="
+          ls -la cypress/reports/ || echo "No reports directory found"
+          
+          if ls cypress/reports/*.json 1> /dev/null 2>&1; then
+            echo "Found JSON reports, generating HTML..."
+            ls -la cypress/reports/*.json
+            npx mochawesome-merge cypress/reports/*.json > cypress/final-report/report.json
+            npx marge cypress/final-report/report.json -f "report-${{ matrix.folder }}" -o cypress/final-report --inline
+            echo "Generated report: cypress/final-report/report-${{ matrix.folder }}.html"
+          else
+            echo "No JSON reports found. Full directory structure:"
+            find . -name "*.json" -path "*/cypress/*" 2>/dev/null || echo "No JSON files found in cypress directory"
+          fi
 
       - name: Upload Cypress HTML Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: "Report - ${{ matrix.folder }}"
           path: cypress/final-report/*.html
+
+      - name: Upload Cypress Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.folder }} - Screenshots"
+          path: cypress/screenshots
+
+      - name: Upload Cypress Videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ matrix.folder }} - Videos"
+          path: cypress/videos
 
       - name: Upload test logs
         if: always()
