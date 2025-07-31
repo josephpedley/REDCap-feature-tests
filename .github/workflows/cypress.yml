@@ -46,8 +46,7 @@ jobs:
           echo "🔍 Running tests for folder: ${{ matrix.folder }}"
           mkdir -p cypress-results cypress/reports
           npx cypress run \
-            --env BASE_URL=$'BASE_URL',ADMIN_USERNAME=$'ADMIN_USERNAME',ADMIN_PASSWORD=$'ADMIN_PASSWORD',TESTUSER_USERNAME=$'TESTUSER_USERNAME',TESTUSER_PASSWORD=$'TESTUSER_PASSWORD'\
-            --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
+          --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",TESTUSER_USERNAME="$TESTUSER_USERNAME",TESTUSER_PASSWORD="$TESTUSER_PASSWORD" \            --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
             --reporter mochawesome \
             --reporter-options reportDir=cypress/reports,overwrite=false,html=false,json=true \
             > cypress-results/test-report.log 2>&1 || true
