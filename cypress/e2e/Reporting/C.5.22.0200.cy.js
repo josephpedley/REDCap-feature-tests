@@ -32,15 +32,15 @@ describe('Reporting functionality', () => {
 
     // Go back to reports list and verify rows
     DataExportsReportsAndStatsPage.goToMyReports();
-    DataExportsReportsAndStatsPage.assertReportRowTitle(2, 'C.5.22.0200.100 REPORT_EDIT2');
+    DataExportsReportsAndStatsPage.assertReportRowTitle(4, 'C.5.22.0200.100 REPORT_EDIT2');
 
     // Copy the report and verify copy appears
     DataExportsReportsAndStatsPage.copyReportByRowNumber(2);
-    DataExportsReportsAndStatsPage.assertReportRowTitle(2, 'C.5.22.0200.100 REPORT_EDIT2');
-    DataExportsReportsAndStatsPage.assertReportRowTitle(3, 'C.5.22.0200.100 REPORT_EDIT2 (copy)');
+    DataExportsReportsAndStatsPage.assertReportRowTitle(4, 'C.5.22.0200.100 REPORT_EDIT2');
+    DataExportsReportsAndStatsPage.assertReportRowTitle(5, 'C.5.22.0200.100 REPORT_EDIT2 (copy)');
 
     // Delete the original and verify the copy moved up
     DataExportsReportsAndStatsPage.deleteReportByRowNumber(2);
-    DataExportsReportsAndStatsPage.assertReportRowTitle(2, 'C.5.22.0200.100 REPORT_EDIT2 (copy)');
+    DataExportsReportsAndStatsPage.assertReportRowTitle(4, 'C.5.22.0200.100 REPORT_EDIT2 (copy)');
   });
 });
