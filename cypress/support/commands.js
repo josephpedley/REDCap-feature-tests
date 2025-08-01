@@ -47,7 +47,7 @@ Cypress.Commands.add('loginTestUser2', () => {
     cy.contains('div', 'Auto-numbering for records')
   .find('button')
   .should('contain', 'Disable')
-  .click();
+  .click({force:true});
 cy.get('.x-panel-header')
   .contains('External Modules')
   .parents('.x-panel-header')
