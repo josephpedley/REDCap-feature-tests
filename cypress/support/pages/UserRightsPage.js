@@ -73,8 +73,10 @@ assignUserToRole(user,role){
   cy.get('#new_username_assign')
   .clear() 
   .type(user);
+  cy.wait(500)
   cy.get('#assignUserBtn').click();
   cy.get('#user_role').select(role);
+  cy.wait(500)
   cy.get('#assignDagRoleBtn').click();
 }
  checkTableRow(roleName, username) {
