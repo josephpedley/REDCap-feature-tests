@@ -46,6 +46,7 @@ jobs:
           echo "🔍 Running tests for folder: ${{ matrix.folder }}"
           mkdir -p cypress/reports
           npx cypress run \
+            --browser chrome \
             --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",ADMIN_PASSWORD="$ADMIN_PASSWORD",TESTUSER_USERNAME="$TESTUSER_USERNAME",TESTUSER_PASSWORD="$TESTUSER_PASSWORD" \
             --spec "cypress/e2e/${{ matrix.folder }}/**/*.cy.js" \
             || true
