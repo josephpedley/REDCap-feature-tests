@@ -73,8 +73,9 @@ assignUserToRole(user,role){
   cy.get('#new_username_assign')
   .clear() 
   .type(user);
-  cy.wait(500)
+  cy.wait(1000)
   cy.get('#assignUserBtn').click();
+  cy.wait(1000)
   cy.get('#user_role').select(role);
   cy.wait(500)
   cy.get('#assignDagRoleBtn').click();

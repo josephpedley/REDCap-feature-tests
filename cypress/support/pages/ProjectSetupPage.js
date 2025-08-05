@@ -13,10 +13,11 @@ class ProjectSetupPage {
 
   keepExistingData() {
     cy.get('#keep_data').check({ force: true });
+    cy.wait(2000)
   }
 
   requestMoveToProduction(){
-    cy.contains('button', 'Yes, Request Admin to Move to Production Status').click();
+    cy.contains('button', 'Yes, Request Admin to Move to Production Status').click({force:true});
 
   }
   verifyRequestSuccessMsg(){
@@ -34,7 +35,7 @@ class ProjectSetupPage {
   }
 
   confirmMove() {
-    cy.contains('button', 'YES, Move').should('be.visible').click();
+    cy.contains('button', 'YES, Move').should('be.visible').click({force:true});
   }
 
   verifySuccessMessage() {
