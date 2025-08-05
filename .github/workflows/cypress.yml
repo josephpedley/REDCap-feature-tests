@@ -93,6 +93,22 @@ jobs:
         with:
           name: "report-${{ matrix.folder }}"
           path: renamed-reports/
+      
+      - name: Prepare videos
+        if: always()
+        run: |
+          FOLDER_NAME=$(echo "${{ matrix.folder }}" | tr ' ' '_' | tr -d '/')
+          mkdir -p "videos/${FOLDER_NAME}"
+          cp -r cypress/reports/videos/* "videos/${FOLDER_NAME}/"
+
+      - name: Upload videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "videos-${{ matrix.folder }}"
+          path: videos/
+          
+
 
   collect-reports:
     runs-on: ubuntu-latest
