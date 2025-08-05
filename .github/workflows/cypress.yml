@@ -132,22 +132,22 @@ jobs:
           path: final-reports
 
   collect-videos:
-  runs-on: ubuntu-latest
-  needs: run-cypress
+    runs-on: ubuntu-latest
+    needs: run-cypress
 
-  steps:
-    - name: Download all video artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: combined-videos
+    steps:
+      - name: Download all video artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: combined-videos
 
-    - name: Combine all videos into one folder
-      run: |
-        mkdir -p final-videos
-        find combined-videos -type f -name "*.mp4" -exec cp --parents {} final-videos/ \;
+      - name: Combine all videos into one folder
+        run: |
+          mkdir -p final-videos
+          find combined-videos -type f -name "*.mp4" -exec cp --parents {} final-videos/ \;
 
-    - name: Upload combined videos folder
-      uses: actions/upload-artifact@v4
-      with:
-        name: all-cypress-videos
-        path: final-videos
+      - name: Upload combined videos folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-cypress-videos
+          path: final-videos
