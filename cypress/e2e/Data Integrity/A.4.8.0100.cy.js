@@ -5,7 +5,7 @@ import FieldValidationPage from "../../support/pages/FieldValidationPage";
 import MyProjectsPage from "../../support/pages/MyProjectsPage";
 import ProjectPage from "../../support/pages/ProjectPage"
 
-describe('Feature: Control Center - Field Validation Types', () => {
+describe('A.4.8.0100.100 - Field Validation Types', () => {
   it('should support enabling and disabling of various field validation types including Date, Datetime, Email, Integer, Number, and Time', () => {
     cy.loginAdmin();
     cy.createProject('A.4.8.0100.100', 'Project_1.xml');
@@ -86,7 +86,10 @@ const expectedValidationOptions2 = [
   'Time (HH:MM)',
   'Zipcode (U.S.)'
 ];
-DesignerPage.assertDropdown(expectedValidationOptions2);
+DesignerPage.assertDropdown(expectedValidationOptions2); //Note you must enable number 1 after first run
+DashboardPage.goToControlCenter();
+ControlCenterPage.openFieldValidationPage();
+FieldValidationPage.disableValidationByLabel('Number (1 decimal place - comma as decimal)')
 
 
 
