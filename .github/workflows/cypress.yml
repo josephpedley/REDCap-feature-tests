@@ -25,12 +25,12 @@ jobs:
 
       - name: Run delete all projects script
         run: |
-          echo "🧹 Deleting all projects before tests"
+          echo " Deleting all projects before tests"
           npx cypress run \
             --browser chrome \
             --env BASE_URL="$BASE_URL",ADMIN_USERNAME="$ADMIN_USERNAME",ADMIN_PASSWORD="$ADMIN_PASSWORD" \
             --spec "cypress/e2e/DELETE_PROJECTS.cy.js"
-          echo "✅ Cleanup complete"
+          echo " Cleanup complete"
 
   run-cypress:
     runs-on: ubuntu-latest
