@@ -75,7 +75,7 @@ class DataExportsReportsAndStatsPage {
     cy.contains('button.ok-button', 'Delete').click();
   }
 
-   exportReportCSVByRowNumber(rowNumber) {
+   exportReportCSVByRowNumber(rowNumber, format) {
     cy.get('#table-report_list tr')
       .filter((index, el) => el.id.startsWith('reprow_'))
       .eq(rowNumber - 1)
@@ -83,13 +83,16 @@ class DataExportsReportsAndStatsPage {
         cy.contains('button', ' Export Data').click();
       });
 
-    cy.get('input[name="export_format"][value="csvraw"]').check({force:true});
+    cy.get(`input[name="export_format"][value="${format}"]`).check({force:true});
     cy.wait(500)
     cy.get('.ui-dialog-buttonset').within(()=> {
         cy.get('button.ui-button.ui-corner-all.ui-widget').contains('Export Data').click({force:true});
     })
     cy.contains('Data export was successful!')
-    cy.get('a[href*="FileRepositoryController:download"]').click();
+    if(format == 'spss'){
+      return cy.get(`a[href*="FileRepositoryController:download"] img[src*="spss"]`).first().click();
+    }
+    cy.get('a[href*="FileRepositoryController:download"]').first().click();
   }
     assertCSVHeaders(expectedHeaders) {
   cy.task('getLatestCsv').then(filePath => {
