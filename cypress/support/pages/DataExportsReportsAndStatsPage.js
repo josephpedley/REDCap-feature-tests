@@ -28,11 +28,12 @@ class DataExportsReportsAndStatsPage {
   /**
    * Assert the title of a report row by 1-based row number.
    */
- assertReportRowTitle(rowNumber, expectedTitle) {
+ assertReportRowTitle(rowNumber, expectedTitle, expectedCharacter) {
   cy.get('#table-report_list tr')
     .filter((index, el) => el.id.startsWith('reprow_')) // Keep all report rows including "ALL", "SELECTED", etc.
     .eq(rowNumber - 1)
     .within(() => {
+      cy.get('td').eq(1).should('contain', expectedCharacter)
       cy.get('td').eq(2).should('contain.text', expectedTitle);
     });
 }
@@ -73,6 +74,33 @@ class DataExportsReportsAndStatsPage {
     cy.contains('span', 'DELETE REPORT?').should('be.visible');
     cy.contains('button.ok-button', 'Delete').click();
   }
-}
+
+   exportReportCSVByRowNumber(rowNumber) {
+    cy.get('#table-report_list tr')
+      .filter((index, el) => el.id.startsWith('reprow_'))
+      .eq(rowNumber - 1)
+      .within(() => {
+        cy.contains('button', ' Export Data').click();
+      });
+
+    cy.get('input[name="export_format"][value="csvraw"]').check({force:true});
+    cy.wait(500)
+    cy.get('.ui-dialog-buttonset').within(()=> {
+        cy.get('button.ui-button.ui-corner-all.ui-widget').contains('Export Data').click({force:true});
+    })
+    cy.contains('Data export was successful!')
+    cy.get('a[href*="FileRepositoryController:download"]').click();
+  }
+    assertCSVHeaders(expectedHeaders) {
+  cy.task('getLatestCsv').then(filePath => {
+    cy.readFile(filePath, 'utf8').then(csv => {
+      const headers = csv.split('\n')[0];
+      expectedHeaders.forEach(header => {
+        expect(headers).to.include(header);
+      });
+    });
+  });
+    }
+  }
 
 export default new DataExportsReportsAndStatsPage();

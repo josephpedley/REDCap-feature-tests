@@ -19,6 +19,10 @@ cy.get('td.nowrap a[href*="page=data_types"]').first().click();
 
   }
 
+  addSurveyEvent3(){
+   cy.get('td.nowrap a[href*="page=survey"]').first().click()
+  }
+
   addRecordTextValidationEvent1(){
     cy.get('td.nowrap a[href*="page=text_validation"]').first().click();
   }

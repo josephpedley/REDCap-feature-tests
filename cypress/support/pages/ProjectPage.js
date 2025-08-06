@@ -42,5 +42,6 @@ class ProjectPage{
     cy.contains('a', 'File Repository').click()
     cy.get('.ItemListBreadcrumb-link').contains('All Files').should('be.visible');
   }
+  
 }
 export default new ProjectPage();

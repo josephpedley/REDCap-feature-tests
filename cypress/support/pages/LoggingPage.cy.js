@@ -39,6 +39,9 @@ class LoggingPage {
 downloadAllLogging(){
   cy.contains('button', 'All logging').click();
 }
+filterByUsername(username){
+  cy.get('#usr').select(username)
+}
 
 }
 
