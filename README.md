@@ -40,8 +40,11 @@
 - **Open Cypress interactive test runner:**  
   npx cypress open
 
-- **Run all tests headlessly (useful for CI):**  
+- **Run all tests headlessly:**  
   npx cypress run
+  If you have access to this repo, you can just use the GitHub Actions workflow
+
+
 
 ---
 
