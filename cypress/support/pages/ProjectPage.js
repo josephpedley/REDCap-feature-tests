@@ -37,6 +37,7 @@ class ProjectPage{
   }
   openCustomiseEsignatures(){
     cy.contains('a', 'Customize & Manage Locking/E-signatures').click()
+    cy.contains('button', 'I understand. Let me make changes').click()
   }
   openFileRepository(){
     cy.contains('a', 'File Repository').click()

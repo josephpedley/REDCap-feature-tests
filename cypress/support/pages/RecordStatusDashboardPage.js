@@ -34,6 +34,10 @@ class RecordStatusDashboardPage {
     });
   });
 }
+changeBubbleByLink(bubbleName){
+  cy.contains('a', bubbleName).click()
+}
+
 
 }
 
