@@ -24,9 +24,18 @@ class ControlCenterPage {
   }
   toggleFileSharingViaPublicLink(choice){
     cy.get('select[name="file_repository_allow_public_link"]').select(choice);
-
   }
-  
+  goToBrowseProjects(){
+    cy.contains('a', 'Browse Projects').click();
+    cy.contains('Viewing projects accessible by user:').should('be.visible')
+  }
+  browseProjectByName(name){
+    cy.get('#project_search').type(name)
+    cy.get('#project_search_btn').click()
+    cy.contains(name).should('be.visible')
+    cy.contains('a', name).click()
+    cy.contains('Project Home').should('be.visible')
+  }
 
   
 }

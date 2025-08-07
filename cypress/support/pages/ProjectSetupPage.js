@@ -78,6 +78,15 @@ class ProjectSetupPage {
   .should('contain.text', 'Disable')
   .click();
   }
+  disableLongitudinal(){
+    cy.get('#setupLongiBtn').click();
+    cy.get('button.ok-button.ui-button.ui-corner-all.ui-widget').click();
+    cy.get('#setupLongiBtn').should('contain.text', 'Enable')
+  }
+   enableLongitudinal(){
+    cy.get('#setupLongiBtn').click();
+    cy.get('#setupLongiBtn').should('contain.text', 'Disable')
+  }
 
 }
 

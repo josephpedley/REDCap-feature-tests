@@ -27,6 +27,14 @@ class RecordStatusDashboardPage {
           .and('include', 'circle_gray.png');
       });
   }
+  assertTableHeaders(expectedHeaders) {
+  cy.get('#record_status_table').within(() => {
+    expectedHeaders.forEach((header) => {
+      cy.contains('th', header).should('be.visible');
+    });
+  });
+}
+
 }
 
 export default new RecordStatusDashboardPage;
